@@ -1,0 +1,379 @@
+/********   General styles     **************/
+
+html {
+  font: 200 16px Helvetica, Arial, sans-serif;
+}
+
+input[type="submit"], input[type="checkbox"] {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  font: inherit;
+  color: inherit;
+}
+
+label {
+  cursor: pointer;
+}
+
+label:hover, a:hover, a:active {
+  color: #148fd5;
+}
+
+.num-todos {
+  font-size: 14px;
+  background-color: #6b7292;
+  padding: 1px 5px;
+  border-radius: 10px;
+}
+
+header .num-todos, .active .num-todos {
+  background-color: #148fd5;
+  color: #fff;
+}
+
+/**********   menu toggle button    **********/
+
+label[for="menu_toggle"] {
+  position: absolute;
+  top: 24px;
+  left: 33px;
+  z-index: 1;
+  display: none;
+}
+
+/*************     nav area     *************/
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 333px;
+  background: #464f77;
+  padding-top: 15px;
+  color: #b2b5c3;
+}
+
+table {
+  border-collapse: collapse;
+  vertical-align: middle;
+  margin-top: 50px;
+}
+
+th {
+  font-size: 18px;
+  font-weight: inherit;
+  height: 45px;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+td {
+  height: 40px;
+  box-sizing: border-box;
+}
+
+td:first-child, th:first-child {
+  padding-left: 139px;
+}
+
+td:nth-child(2), th:nth-child(2) {
+  padding-right: 32px;
+  padding-left: 60px;
+  text-align: right;
+}
+
+th:first-child {
+  background: transparent url('icons/list_icon.png') 102px 10px no-repeat;
+}
+
+.active td {
+  background-color: #383f5f;
+  color: #fff;
+}
+
+.completed {
+  width: 100%;
+  text-align: left;
+}
+
+.completed th:first-child {
+  background-image: url('icons/completed_icon.png');  
+}
+
+.completed td {
+  text-decoration: line-through;
+}
+
+/*************    Main area    ******************/
+
+main {
+  background-color: #fff;
+  overflow: hidden;
+  color: #060606;
+  padding: 70px 8vw 0 21px;
+  position: relative;
+  margin-left: 333px;
+  box-sizing: border-box;
+}
+
+header { 
+  color: #050505;
+  font-size: 21px;
+  font-weight: inherit;
+  margin-bottom: 22px;
+  margin-left: 12px;
+}
+
+header h1 {
+  display: inline;
+  vertical-align: middle;
+  font-weight: inherit
+}
+
+header .num-todos {
+  margin-left: 20px;
+  vertical-align: middle;
+}
+
+/*************     Item Section      *************/
+
+li > label {
+  background: url('icons/checkbox_empty.png') 11px no-repeat;
+  padding-left: 40px;
+  display: inline;
+  line-height: 50px;
+}
+
+label[for="add_item"] {
+  color: #148fd5;
+  background: url('icons/plus_icon.png') 11px no-repeat;
+  padding-left: 40px;
+  line-height: 50px;
+  display: block;
+}
+
+li > form {
+  float: right;
+  line-height: 50px;
+}
+
+li {
+  border-top: 1px solid #e7e7e7;
+  box-sizing: border-box;
+  height: 50px;
+}
+
+.completed-item {
+  background-image: url('icons/checkbox_checked.png');
+  text-decoration: line-through;
+  color: #b3b3b3;
+}
+
+/***********    Modal controls    ********/
+
+#item1:checked + label:after {
+  position: fixed;
+  content: "";
+  top: 0;
+  left: 333px;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.2);
+  z-index: 1;
+  cursor: pointer;
+}
+
+#item1:checked ~ #modal {
+  display: block;
+}
+
+/*********      Modal Form     ********/
+
+#modal {
+  position: absolute;
+  top: 108px;
+  left: 33%;
+  margin-left: -192px;
+  padding: 24px 20px 20px 30px;
+  background: #fff;
+  width: 576px;
+  box-sizing: border-box;
+  display: none;
+  z-index: 2;
+}
+
+dd, dt {
+  display: inline-block;
+}
+
+dt {
+  width: 19%;
+}
+
+dd {
+  width: 75%;
+  margin: 12px;
+}
+
+input[name="title"], select, textarea {
+  border: 1px solid #b3b3b3;
+  line-height: 36px;
+  background-color: #fff;
+  font:inherit;
+  padding: 7px 9px;
+  box-sizing: border-box;
+}
+
+input[name="title"] {
+  height: 36px;
+  width: 100%;
+}
+
+select {
+  height: 36px;
+  width: 30%;
+  border-radius: 0;
+}
+
+select:first-child {
+  margin-right: 2%;
+}
+select:nth-child(2) {
+  margin: 0 2%;
+}
+select:last-child {
+  float:right;
+}
+
+textarea {
+  height: 144px;
+  width: 100%;
+  resize: none;
+}
+
+.description {
+  vertical-align: top;
+  padding-top: 22px;
+}
+
+.button {
+  width: 180px;
+  height: 34px;
+  background-color: #148fd5;
+  border-radius: 5px;
+  color: #fff;
+  font-size: inherit;
+  line-height: 38px;
+  text-align: center;
+  border: 2px solid #148fd5;
+  margin: 5px 16px 12px 8px;
+  float: right;
+}
+
+.button:hover {
+  color: inherit;
+}
+
+#mark_completed:checked + label, .button:active {
+  border: 2px inset #ccc;
+}
+
+/*******.  Media Queries      ************/
+
+@media (max-width: 1000px) {
+  /* for vertical form layout */
+  #modal {
+    width: 420px;
+    left: 50%;
+    margin-left: -210px;
+  }
+
+  dt, dd {           
+    width: 95%;
+  }
+
+  dd {
+    margin: 8px 0 20px 0;
+  }
+
+  .description {
+    padding-top: 0;
+  }
+}
+
+
+@media (max-width: 768px) {
+  label[for="menu_toggle"] {
+    display: block;
+  }
+  
+  nav {
+    display: none;
+  }
+
+  main {
+    margin-left: 0; 
+    position: static; 
+  }
+
+  #item1:checked + label:after {
+    left: 0;
+  }
+
+  #menu_toggle:checked ~ nav {
+    display: block;
+  }
+
+  #menu_toggle:checked ~ main {
+    margin-left: 333px;
+  }
+
+  #menu_toggle:checked + label {
+    left: 363px;
+  }
+
+  section {
+    overflow: hidden;
+    min-width: 335px;
+  }
+}
+
+@media (max-width: 420px) and (orientation: portrait) {
+  
+  /* condensing various parts of the page */
+
+  #modal {
+    width: 96%;
+    margin-left: -48%;
+  }
+
+  main {
+    padding-right: 20px;
+  }
+
+  th:first-child, td:first-child {         
+    padding-left: 60px;
+    background-position: 20px 10px;
+  }
+
+  th:nth-child(2), td:nth-child(2) {
+    padding-left: 30px;
+  }
+
+  nav {
+    width: 223px;
+    height: 100vmax;
+  }
+
+  #menu_toggle:checked + label {
+    left: 255px;
+  }
+
+  #menu_toggle:checked ~ main {
+    margin-left: 223px;
+  }
+}
