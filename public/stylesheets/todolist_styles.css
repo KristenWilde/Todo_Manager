@@ -42,7 +42,6 @@ label[for="menu_toggle"] {
   top: 24px;
   left: 33px;
   z-index: 1;
-  /*display: none;*/
 }
 
 /*************     nav area     *************/
@@ -63,6 +62,7 @@ table {
   vertical-align: middle;
   margin-top: 50px;
   width: 100%;
+  text-align: left;
 }
 
 th {
@@ -79,13 +79,14 @@ td {
 }
 
 td:first-child, th:first-child {
-  padding-left: 130px;
+  padding-left: 132px;
+
 }
 
 td:nth-child(2), th:nth-child(2) {
-  padding-right: 32px;
-  padding-left: 60px;
-  text-align: right;
+  padding-right: 40px;
+  padding-left: 44px;
+  text-align: center;
 }
 
 th:first-child {
@@ -147,7 +148,6 @@ header .num-todos {
   background: url('../icons/plus_icon.png') 11px no-repeat;
   padding-left: 40px;
   line-height: 50px;
-  /*display: block;*/
 }
 
 li {
@@ -160,7 +160,6 @@ li {
 .item a {
   background: url('../icons/checkbox_empty.png') 11px no-repeat;
   padding-left: 40px;
-/*  display: inline;*/
   line-height: 50px;
 }
 
@@ -212,7 +211,7 @@ div.item {
 
 #modal form {
   position: absolute;
-  top: 108px;
+  top: 120px;
   left: 50%;
   margin-left: -288px;
   padding: 24px 20px 20px 30px;
@@ -295,31 +294,6 @@ dd + dd {
   margin-left: 115px;
 }
 
-/*******.  Media Queries      ************/
-
-/* vertical form layout:
-@media (max-width: 1000px) {
-  
-    #modal {
-    width: 420px;
-    left: 50%;
-    margin-left: -210px;
-  }
-
-  dt, dd {           
-    width: 95%;
-  }
-
-  dd {
-    margin: 8px 0 20px 0;
-  }
-
-  .description {
-    padding-top: 0;
-  }
-}*/
-
-
 @media (max-width: 768px) {
   label[for="menu_toggle"] {
     display: block;
@@ -350,14 +324,13 @@ dd + dd {
     left: 363px;
   }
 
-  section {
+  main {
     overflow: hidden;
     min-width: 335px;
   }
 }
 
 @media (max-width: 420px) and (orientation: portrait) {
-  
   /* condensing various parts of the page */
 
   #modal {

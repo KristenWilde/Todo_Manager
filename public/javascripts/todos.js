@@ -61,7 +61,7 @@ class TodoCollection {
     return this.todos.filter( todo => !todo.completed );
   }
 
-  displayDates() {
+  dueDates() {
     const displayDates = [];
     this.todos.forEach( todo => {
       if (!displayDates.includes(todo.displayDate)) {
@@ -81,20 +81,19 @@ class TodoCollection {
 class TodoApp {
   constructor() {
     this.buildTemplates();
-    this.listsByMonth = [];
-    this.completedListsByMonth = [];
     this.allTodos = new TodoCollection('All Todos');
-    this.activeList = this.allTodos;
-    this.getTodos()
+    this.currentListId = 'All Todos';
 
     $('#add_new').click(this.showCreateForm.bind(this));
     $('#todos').on('click', '.item a', this.showEditForm.bind(this));
     $('#todos').on('click', '.delete', this.deleteTodo.bind(this));
     $('#todos').on('click', '.item', this.toggleComplete.bind(this));
-    $('#overlay').click(this.closeModal.bind(this));
-    $('#save').click(this.saveTodo.bind(this));
     $('#mark_complete').click(this.markComplete.bind(this));
+    $('#save').click(this.saveTodo.bind(this));
+    $('#overlay').click(this.closeModal.bind(this));
     $('nav').on('click', 'tr', this.showList.bind(this));
+
+    this.getTodos()
   }
 
   buildTemplates() {
@@ -109,65 +108,26 @@ class TodoApp {
     })
   }
 
-  getTodos() {
-    $.ajax({
-      method: 'GET',
-      url: '/api/todos',
-      dataType: 'json',
-      success: this.processData.bind(this),
+  showCreateForm(e) {
+    e.preventDefault();
+    $('#modal').fadeIn();
+  }
+
+  showEditForm(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const id = e.target.parentElement.getAttribute('data-id');
+    const todo = this.allTodos.find(id);
+
+    this.fillValuesToEdit(todo);
+    $('#modal').fadeIn();
+  }
+
+  fillValuesToEdit(todo) {
+    const $inputs = $('#modal').find('[name]');
+    $inputs.each( (i, input) => {
+      input.value = todo[input.name] || "";
     })
-  }
-
-  processData(jsonCollection) {
-    this.allTodos.reset();
-
-    jsonCollection.forEach( data => {
-      this.allTodos.add(new Todo(data));
-    })
-
-    this.sortByDateAndCompletion();
-    this.renderNav();
-    this.renderList(this.activeList);
-  }
-
-  sortByDateAndCompletion() {
-    const dueDates = this.allTodos.displayDates();
-    this.listsByMonth = dueDates.map( dueDate => this.createTodoCollection(dueDate) );
-    this.updateCompletedLists();
-  }
-
-  createTodoCollection(dueDate) {
-    const todoArray = this.allTodos.todos.filter( todo => {
-      return todo.displayDate === dueDate;
-    });
-    return new TodoCollection(dueDate, todoArray);
-  }
-
-  updateCompletedLists() {
-    let completedTodos = this.allTodos.completedTodos();
-    this.allCompletedTodos = new TodoCollection('Completed', completedTodos);
-
-    this.completedListsByMonth = [];
-    this.listsByMonth.forEach( list => {
-      completedTodos = list.completedTodos();
-      if (completedTodos.length > 0) {
-        const newList = new TodoCollection(list.heading, completedTodos, list.heading + '-c');
-        this.completedListsByMonth.push(newList);
-      }
-    })
-  }
-
-  renderNav() {
-    $('#total_count').text(this.allTodos.count);
-    $('#todos_by_date').html(this.templates.navBody(this.listsByMonth));
-    $('#total_completed').text(this.allCompletedTodos.count);
-    $('#completed_by_date').html(this.templates.navBody(this.completedListsByMonth));
-  }
-
-  renderList(collection) {
-    $('#todos').html(this.templates.todoCollection(collection.sortedTodos()));
-    $('main h1').text(collection.heading);
-    $('main .num-todos').text(collection.count);
   }
 
   deleteTodo(e) {
@@ -185,36 +145,7 @@ class TodoApp {
       type: 'POST',
       url: `/api/todos/${id}/toggle_completed`,
       dataType: 'json',
-      success: json => {
-        this.allTodos.find(id).update(json);
-        this.updateCompletedLists();
-        this.renderList(this.activeList);
-        this.renderNav();
-      }
-    })
-  }
-
-  showCreateForm(e) {
-    e.preventDefault();
-    $('#modal').fadeIn();
-  }
-
-  showEditForm(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const id = e.target.parentElement.getAttribute('data-id');
-    const todo = this.allTodos.find(id);
-    this.fillValuesToEdit(todo);
-
-    $('#modal').fadeIn();
-  }
-
-  fillValuesToEdit(todo) {
-    const $inputs = $('#modal').find('[name]');
-
-    $inputs.each( (i, input) => {
-      console.log(input.name)
-      input.value = todo[input.name] || "";
+      success: this.processCompletedStatus.bind(this),
     })
   }
 
@@ -228,28 +159,50 @@ class TodoApp {
         type: 'PUT',
         url: '/api/todos/' + id,
         data: "completed=true",
-        success: () => {
-          this.getTodos();
-          $('#modal form')[0].reset();
-          $('#modal').fadeOut();
+        dataType: 'json',
+        success: (json) => {
+          this.processCompletedStatus(json);
+          this.closeModal();
         }
       })
     }
   }
 
   saveTodo(e) {
-    // e.preventDefault();
     const id = e.target.value || null;
-    const $form = $('#modal form')
+    if (this.validateForm()) {
+      this.submitForm(id);
+    }
+  }
 
+  validateForm() {
+    const titleText = $('#title').val().trim();
+    const descText = $('#description').val().trim();
+    const HTMLChars = /['/<>&\x22]+/;
+
+    if (titleText.length < 3) {
+      alert('Title is required and must be at least 3 characters long.');
+      return false;
+    }
+    if (titleText.match(HTMLChars) || descText.match(HTMLChars)) {
+      alert("The following characters are not allowed: </>\"&'");
+      return false;
+    }
+    return true;
+  }
+
+  submitForm(id) {
     $.ajax({
       type: id ? 'PUT' : 'POST',
       url: id ? '/api/todos/' + id : '/api/todos',
-      data: $form.serialize(),
-      success: () => {
-        this.getTodos();
-        $form[0].reset();
-        $('#modal').fadeOut();
+      data: $('#modal form').serialize(),
+      dataType: 'json',
+      success: (json) => {
+        if (!id) {
+          this.currentListId = 'All Todos';
+        }
+        this.processJSON(json);
+        this.closeModal();
       }
     })
   }
@@ -259,26 +212,105 @@ class TodoApp {
     $('#modal').fadeOut();
   }
 
+  getTodos() {
+    $.ajax({
+      method: 'GET',
+      url: '/api/todos',
+      dataType: 'json',
+      success: this.processJSON.bind(this),
+    })
+  }
+
+  processJSON(json) {
+    if (Array.isArray(json)) {
+      this.allTodos.reset();
+
+      json.forEach( todoData => {
+        this.allTodos.add( new Todo(todoData) );
+      })
+    } 
+    else if (this.allTodos.find(json.id)) {
+      this.allTodos.find(json.id).update(json);
+    } 
+    else {
+      this.allTodos.add( new Todo(json) );
+    }
+    
+    this.updateAllLists();
+    this.renderNav();
+    this.renderList(this.findList(this.currentListId));
+  }
+
+  processCompletedStatus(json) {
+    this.allTodos.find(json.id).update(json);
+
+    this.updateCompletedLists();
+    this.renderList(this.findList(this.currentListId));
+    this.renderNav();
+  }
+
+  updateAllLists() {
+    const dueDates = this.allTodos.dueDates();
+    this.listsByMonth = dueDates.map( dueDate => this.createTodoCollection(dueDate) );
+    this.updateCompletedLists();
+  }
+
+  createTodoCollection(dueDate) {
+    const todoArray = this.allTodos.todos.filter( todo => {
+      return todo.displayDate === dueDate;
+    });
+    return new TodoCollection(dueDate, todoArray);
+  }
+
+  updateCompletedLists() {
+    let completedTodos = this.allTodos.completedTodos();
+    this.allCompletedTodos = new TodoCollection('Completed', completedTodos);
+
+    this.completedListsByMonth = [];
+
+    this.listsByMonth.forEach( list => {
+      completedTodos = list.completedTodos();
+      if (completedTodos.length > 0) {
+        const newList = new TodoCollection(list.heading, completedTodos, list.heading + '-c');
+        this.completedListsByMonth.push(newList);
+      }
+    })
+  }
+
+  renderNav() {
+    $('#total_count').text(this.allTodos.count);
+    $('#todos_by_date').html(this.templates.navBody(this.listsByMonth));
+    $('#total_completed').text(this.allCompletedTodos.count);
+    $('#completed_by_date').html(this.templates.navBody(this.completedListsByMonth));
+  }
+
+  renderList(collection) {
+    if (collection) {
+      $('#todos').html(this.templates.todoCollection(collection.sortedTodos()));
+      $('main h1').text(collection.heading);
+      $('main .num-todos').text(collection.count);
+    }
+    else {
+      $('#todos').html('');
+      $('main .num-todos').text(0);
+    }
+  }
+
   showList(e) {
     e.preventDefault();
     const $tr = $(e.target).closest('tr');
-    console.log($tr);
     const listId = $tr.attr('data-list');
+    this.currentListId = listId;
 
     $('tr').removeClass('active');
     $tr.addClass('active');
 
-    this.activeList = this.findList(listId);
-    this.renderList(this.activeList);
+    this.renderList(this.findList(listId));
   }
 
   findList(listId) {
     const allLists = this.completedListsByMonth
       .concat(this.listsByMonth, this.allTodos, this.allCompletedTodos);
-    console.log(allLists);
     return allLists.filter( list => list.listId === listId )[0];
   }
-
-
-
 }

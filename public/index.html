@@ -29,27 +29,7 @@
           <th><span class="num-todos" id="total_count">0</span></th>
         </tr>
       </thead>
-      <tbody id="todos_by_date">
-        <tr>
-          <td><a href="#"><time datetime="02-16">02/16</time></a></td>
-          <td><span class="num-todos">8</span></td>
-        </tr>
-        <tr>
-          <td><a href="#"><time datetime="03-16">03/16</time></a></td>
-          <td><span class="num-todos">2</span></td>
-        </tr>
-        <tr>
-          <td><a href="#"><time datetime="04-16">04/16</time></a></td>
-          <td><span class="num-todos">1</span></td>
-        </tr>
-        <tr class="active">
-          <td><a href="#"><time datetime="05-16">05/16</time></a></td>
-          <td><span class="num-todos">1</span></td>
-        </tr>
-        <tr>
-          <td><a href="#"><time datetime="06-16">06/16</time></a></td>
-          <td><span class="num-todos">6</span></td>
-        </tr>
+      <tbody id="todos_by_date"></tr>
       </tbody>
     </table>
     <table class="completed">
@@ -59,138 +39,121 @@
           <th><span id="total_completed" class="num-todos">0</span></th>
         </tr>
       </thead>
-      <tbody id="completed_by_date">
-
-      </tbody>
+      <tbody id="completed_by_date"></tbody>
     </table>
   </nav>
 
   <!-- Main area -->
 
-  <main>
-    <section id="list"> 
-      <header>
-        <h1>02/16</h1>
-        <span class="num-todos">8</span>
-      </header>
-      
-      <a id="add_new">Add new to do</a>
-      <ul id="todos">
-        <li>
-          <div data-id="{{id}}" class="item">
-            <a>Style this element - 03/18</a>
-          </div>
-          <form class="delete" data-id="{{id}}">
-            <img src="icons/trash_bin.png" alt="Delete item">
-          </form>
-        </li>
-        <li>
-          <div data-id="{{id}}" class="item completed_item">
-            <a>Style this completed element - 03/18</a>
-          </div>
-          <form class="delete" data-id="{{id}}">
-            <img src="icons/trash_bin.png" alt="Delete item">
-          </form>
-        </li>
-        
-      </ul>
-    </section>
-    </main>
+  <main> 
+    <header>
+      <h1>All Todos</h1>
+      <span class="num-todos">0</span>
+    </header>
+    
+    <a id="add_new">Add new to do</a>
+    <ul id="todos"></ul>
+  </main>
 
-    <section id="modal">
-      <div id="overlay"></div>
-      <form>
-        <fieldset>
-          <dl>
-            <dt><label for="title">Title</label></dt>
-            <dd><input type="text" id="title" name="title"></dd>
-            <dt><label for="day">Due Date</label></dt>
-            <dd>
-              <select id="day" name="day">
-                <option value="">Day</option>
-                <option value="01">1</option><option value="02">2</option>
-                <option value="03">3</option><option value="04">4</option>
-                <option value="05">5</option><option value="06">6</option>
-                <option value="07">7</option><option value="08">8</option>
-                <option value="09">9</option><option value="10">10</option>
-                <option value="11">11</option><option value="12">12</option>
-                <option value="13">13</option><option value="14">14</option>
-                <option value="15">15</option><option value="16">16</option>
-                <option value="17">17</option><option value="18">18</option>
-                <option value="19">19</option><option value="20">20</option>
-                <option value="21">21</option><option value="22">22</option>
-                <option value="23">23</option><option value="24">24</option>
-                <option value="25">25</option><option value="26">26</option>
-                <option value="27">27</option><option value="28">28</option>
-                <option value="29">29</option><option value="30">30</option>
-                <option value="31">31</option>
-              </select>/<!-- 
-           --><select name="month" id="month">
-                <option value="">Month</option>
-                <option value="01">January</option>
-                <option value="02">February</option>
-                <option value="03">March</option>
-                <option value="04">April</option>
-                <option value="05">May</option>
-                <option value="06">June</option>
-                <option value="07">July</option>
-                <option value="08">August</option>
-                <option value="09">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-              </select>/<!-- 
-           --><select name="year" id="year">
-                <option value="">Year</option>
-                <option value="2016">2016</option><option value="2017">2017</option>
-                <option value="2018">2018</option><option value="2019">2019</option>
-                <option value="2020">2020</option><option value="2021">2021</option>
-              </select>
-            </dd>
-            <dt class="description"><label for="description">Description</label></dt>
-            <dd><textarea name="description" id="description" cols="30" rows="5"></textarea></dd>
-            <dd>
-              <button id="save" type="button" name="id">Save</button>
-              <button id="mark_complete" type="button" name="id">Mark As Complete</button>
-            </dd>
-          </dl>
-        </fieldset>
+  <!--  Modal form   -->
+
+  <section id="modal">
+    <div id="overlay"></div>
+    <form>
+      <fieldset>
+        <dl>
+          <dt><label for="title">Title</label></dt>
+          <dd><input type="text" id="title" name="title" required></dd>
+          <dt><label for="day">Due Date</label></dt>
+          <dd>
+            <select id="day" name="day">
+              <option value="">Day</option>
+              <option value="01">1</option><option value="02">2</option>
+              <option value="03">3</option><option value="04">4</option>
+              <option value="05">5</option><option value="06">6</option>
+              <option value="07">7</option><option value="08">8</option>
+              <option value="09">9</option><option value="10">10</option>
+              <option value="11">11</option><option value="12">12</option>
+              <option value="13">13</option><option value="14">14</option>
+              <option value="15">15</option><option value="16">16</option>
+              <option value="17">17</option><option value="18">18</option>
+              <option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option>
+              <option value="23">23</option><option value="24">24</option>
+              <option value="25">25</option><option value="26">26</option>
+              <option value="27">27</option><option value="28">28</option>
+              <option value="29">29</option><option value="30">30</option>
+              <option value="31">31</option>
+            </select>/<!-- 
+         --><select name="month" id="month">
+              <option value="">Month</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>/<!-- 
+         --><select name="year" id="year">
+              <option value="">Year</option>
+              <option value="2016">2016</option><option value="2017">2017</option>
+              <option value="2018">2018</option><option value="2019">2019</option>
+              <option value="2020">2020</option><option value="2021">2021</option>
+              <option value="2022">2022</option><option value="2023">2023</option>
+              <option value="2024">2024</option><option value="2025">2025</option>
+            </select>
+          </dd>
+          <dt class="description"><label for="description">Description</label></dt>
+          <dd><textarea name="description" id="description" cols="30" rows="5"></textarea></dd>
+          <dd>
+            <button id="save" type="button" name="id">Save</button>
+            <button id="mark_complete" type="button" name="id">Mark As Complete</button>
+          </dd>
+        </dl>
+      </fieldset>
+    </form>
+  </section>
+
+  <!-- templates  -->
+
+  <script type="text/x-handlebars" id="navRow" data-type="partial">
+    <tr data-list="{{listId}}">
+      <td><a><time>{{heading}}</time></a></td>
+      <td><span class="num-todos">{{count}}</span></td>
+    </tr>
+  </script>
+
+  <script type="text/x-handlebars" id="navBody">
+    {{#each .}}
+      {{> navRow}}
+    {{/each}}
+  </script>
+
+  <script type="text/x-handlebars" id="todoItem" data-type="partial">
+    <li>
+      <div data-id="{{id}}" class="item {{#if completed}}completed_item{{/if}}">
+        <a>{{title}} - {{displayDate}}</a>
+      </div>
+      <form data-id="{{id}}" class="delete">
+        <img src="icons/trash_bin.png" alt="Delete item">
       </form>
-    </section>
+    </li> 
+  </script>
 
-    <script type="text/x-handlebars" id="navRow" data-type="partial">
-      <tr data-list="{{listId}}">
-        <td><a><time>{{heading}}</time></a></td>
-        <td><span class="num-todos">{{count}}</span></td>
-      </tr>
-    </script>
+  <script type="text/x-handlebars" id="todoCollection">
+    {{#each .}}
+      {{> todoItem}}
+    {{/each}}
+  </script>
 
-    <script type="text/x-handlebars" id="navBody">
-      {{#each .}}
-        {{> navRow}}
-      {{/each}}
-    </script>
-
-    <script type="text/x-handlebars" id="todoItem" data-type="partial">
-      <li>
-        <div data-id="{{id}}" class="item {{#if completed}}completed_item{{/if}}">
-          <a>{{title}} - {{displayDate}}</a>
-        </div>
-        <form data-id="{{id}}" class="delete">
-          <img src="icons/trash_bin.png" alt="Delete item">
-        </form>
-      </li> 
-    </script>
-
-    <script type="text/x-handlebars" id="todoCollection">
-      {{#each .}}
-        {{> todoItem}}
-      {{/each}}
-    </script>
-
-    <script>
-      const app = new TodoApp();
-    </script>
-  
+  <script>
+    const app = new TodoApp();
+  </script>
 </body>
 </html>
