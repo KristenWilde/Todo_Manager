@@ -21,11 +21,16 @@ class Todo {
 }
 
 class TodoCollection {
-  constructor(heading, todoArray=[], listId) {
+  constructor(heading, todoArray=[], idString) {
     this.heading = heading;
     this.todos = todoArray;
-    this.listId = listId || heading;
+    this.getListId(idString);
     this.updateCount();
+  }
+
+  getListId(idString) {
+    let listId = idString || this.heading;
+    this.listId = listId.replace(/[ \/]/g, '_');
   }
 
   updateCount() {
@@ -82,7 +87,7 @@ class TodoApp {
   constructor() {
     this.buildTemplates();
     this.allTodos = new TodoCollection('All Todos');
-    this.currentListId = 'All Todos';
+    this.currentListId = 'All_Todos';
 
     $('#add_new').click(this.showCreateForm.bind(this));
     $('#todos').on('click', '.item a', this.showEditForm.bind(this));
@@ -199,7 +204,7 @@ class TodoApp {
       dataType: 'json',
       success: (json) => {
         if (!id) {
-          this.currentListId = 'All Todos';
+          this.currentListId = this.allTodos.listId;
         }
         this.processJSON(json);
         this.closeModal();
@@ -208,7 +213,9 @@ class TodoApp {
   }
 
   closeModal(e) {
-    $('#modal form')[0].reset();
+    $('#modal form').find('[name]').each((i, el) => {
+      el.value = "";
+    });
     $('#modal').fadeOut();
   }
 
@@ -282,6 +289,7 @@ class TodoApp {
     $('#todos_by_date').html(this.templates.navBody(this.listsByMonth));
     $('#total_completed').text(this.allCompletedTodos.count);
     $('#completed_by_date').html(this.templates.navBody(this.completedListsByMonth));
+    $(`tr[data-list=${this.currentListId}]`).addClass('active');
   }
 
   renderList(collection) {
