@@ -1,3 +1,5 @@
+$(function() {
+
 class Todo {
   constructor(data) {
     this.update(data);
@@ -322,3 +324,6 @@ class TodoApp {
     return allLists.filter( list => list.listId === listId )[0];
   }
 }
+
+new TodoApp();
+});
